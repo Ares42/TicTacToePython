@@ -1,13 +1,13 @@
- 
 import random
 from pprint import pprint
+
 
 debug = True
 
 def inputPlayerLetter():
     # Lets the player type which letter they want to be.
     # Returns a list with the player's letter as the first item, and the computer's letter as the second.
-    if debug == True:
+    if debug:
         print '*** inputPlayerLetter***'
 
     letter = ''
@@ -23,7 +23,7 @@ def inputPlayerLetter():
 
 def whoGoesFirst():
     # Randomly choose the player who goes first.
-    if debug == True:
+    if debug:
         print '*** whoGoesFirst ***'
 
     print 'Would you like to go first? (yes or no)'
@@ -36,25 +36,27 @@ def whoGoesFirst():
 
 def drawBoard(board):
     # This function prints out the board that it was passed.
-    if debug == True:
+    if debug:
         print '*** drawBoard ***'
 
     print 'board = ' 
     print theBoard
 
-    columns = [range(1 + BOARDSIZE*i, BOARDSIZE+1 + BOARDSIZE*i) for i in range(BOARDSIZE)]
-    print 'columns:'
-    print columns
-
-    rows = [range(1 + BOARDSIZE*i, BOARDSIZE+1 + BOARDSIZE*i) for i in range(BOARDSIZE)]
-    print 'rows:'
-    pprint (rows)
-
+    # diagonalleft= [range(BOARDSIZE, BOARDSIZE**2,BOARDSIZE-1)]
+    # print 'diagonalleft'
+    # pprint (diagonalleft)
     #horiz
     #topleft
     #topright
     #cross
 
+    #print horiz + topleft
+
+    for i in range(1,BOARDSIZE):
+        for i in range (1, BOARDSIZE):
+        print ' | ' 
+
+    '''
     # "board" is a list of 10 strings representing the board (ignore index 0)
     print '   |   |'
     print ' ' + board[6] + ' | ' + board[7] + ' | ' + board[8]
@@ -67,10 +69,11 @@ def drawBoard(board):
     print '   |   |'
     print ' ' + board[0] + ' | ' + board[1] + ' | ' + board[2]
     print '   |   |'
+    '''
 
 def getPlayerMove(board):
     # Let the player type in his move.
-    if debug == True:
+    if debug:
         print '*** getPlayerMove ***'
 
     move = ' '
@@ -82,7 +85,7 @@ def getPlayerMove(board):
 
 def isSpaceFree(board, move):
     # Return True if the passed move is free on the passed board.
-    if debug == True:
+    if debug:
         print '*** isSpaceFree ***'
         print 'theBoard[move]:'
         print theBoard[move-1]
@@ -95,34 +98,46 @@ def isSpaceFree(board, move):
     #return board[move] == ' '
 
 def makeMove(board, letter, move):
-    if debug == True:
+    if debug:
         print '*** makeMove ***'
         print 'board:',board
         print 'letter',letter
         print 'move',move
 
-
     board[move] = letter
 
-def isWinner(bo, le):
+def isWinner(board, letter):
     # Given a board and a player's letter, this function returns True if that player has won.
-    # We use bo instead of board and le instead of letter so we don't have to type as much.
 
-    if debug == True:
+    if debug:
         print '*** isWinner ***'
 
-    #this sucks. let's do list comprehension.
 
-    columns = [[range (1 + BOARDSIZE*i, BOARDSIZE+1 + BOARDSIZE*i, BOARDSIZE) for i in range(BOARDSIZE)] for i in range(BOARDSIZE)]
-    print 'columns'
-    print columns
+    columns = [range (1 + i, 1+BOARDSIZE**2, BOARDSIZE) for i in range(BOARDSIZE)]
+    #[[1,4,7],
+    #[2,5,8],
+    #[3,6,9]]
+    if debug:
+        print 'columns:'
+        pprint (columns)
 
     rows = [range(1 + BOARDSIZE*i, BOARDSIZE+1 + BOARDSIZE*i) for i in range(BOARDSIZE)]
-    print 'rows:'
-    pprint (rows)
+    #[[1,2,3],
+    #[4,5,6],
+    #[7,8,9]]
+    if debug:
+        print 'rows:'
+        pprint (rows)
 
-    diagonal = []
+    diagonals = [range(1, 1+BOARDSIZE**2,BOARDSIZE+1), range(BOARDSIZE, BOARDSIZE**2,BOARDSIZE-1)]
+    #[[1,5,9],
+    #[3,5,7]]
+    if debug:
+        print 'diagonals:'
+        pprint (diagonals)
 
+    # need to check to see if a players letters are the ones in the columns, rows and diagonals
+    #should the game only allow n to be an odd number?
 
     '''
     return ((bo[7] == le and bo[8] == le and bo[9] == le) or # across the top
@@ -137,7 +152,7 @@ def isWinner(bo, le):
 
 def getBoardCopy(board):
     # Make a duplicate of the board list and return it the duplicate.
-    if debug == True:
+    if debug:
         print '*** getBoardCopy ***'
 
     dupeBoard = []
@@ -150,7 +165,7 @@ def getBoardCopy(board):
 def chooseRandomMoveFromList(board, movesList):
     # Returns a valid move from the passed list on the passed board.
     # Returns None if there is no valid move.
-    if debug == True:
+    if debug:
         print 'chooseRandomMoveFromList'
 
     possibleMoves = []
@@ -165,7 +180,7 @@ def chooseRandomMoveFromList(board, movesList):
 
 def getComputerMove(board, computerLetter):
     # Given a board and the computer's letter, determine where to move and return that move.
-    if debug == True:
+    if debug:
         print 'getComputerMove'
 
     if computerLetter == 'X':
@@ -216,7 +231,7 @@ Empty side: The player plays in a middle square on any of the 4 sides.
 
 def isBoardFull(board):
     # Return True if every space on the board has been taken. Otherwise return False.
-    if debug == True:
+    if debug:
         print 'isBoardFull'
 
     for i in range(1, 10):
@@ -226,7 +241,7 @@ def isBoardFull(board):
 
 def playAgain():
     # This function returns True if the player wants to play again, otherwise it returns False.
-    if debug == True:
+    if debug:
         print 'playAgain'
 
     print 'Do you want to play again? (yes or no)'
@@ -238,12 +253,10 @@ BOARDSIZE = int(raw_input())
 
 while True:
     # Reset the board
-    
     theBoard = []
-    for i in range (1, BOARDSIZE^2):
+    for i in range (1, 1+BOARDSIZE**2):
         theBoard.append(str(i))
-    print theBoard
-    
+
     playerLetter, computerLetter = inputPlayerLetter()
     turn = whoGoesFirst()
     print 'The ' + turn + ' will go first.'
@@ -264,7 +277,7 @@ while True:
                 if isBoardFull(theBoard):
                     drawBoard(theBoard)
                     print 'The game is a tie!'
-                    break
+                    breakd
                 else:
                     turn = 'computer'
 
